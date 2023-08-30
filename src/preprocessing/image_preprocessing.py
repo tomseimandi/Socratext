@@ -44,3 +44,88 @@ def rotate_image(image, angle: float):
     M = cv2.getRotationMatrix2D(center, angle, 1.0)
     new_image = cv2.warpAffine(new_image, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
     return new_image
+
+
+def crop_ticket_image(image_path: str, save_path: str):
+    # Read image
+    img = cv2.imread(image_path)
+    hh, ww = img.shape[:2]
+
+    # Get edges
+    canny = cv2.Canny(img, 50, 200)
+
+    # Get contours
+    contours = cv2.findContours(
+        canny,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE
+    )
+    contours = contours[0] if len(contours) == 2 else contours[1]
+
+    # Filter out small regions
+    cimg = np.zeros_like(canny)
+    for cntr in contours:
+        area = cv2.contourArea(cntr)
+        if area > 20:
+            cv2.drawContours(cimg, [cntr], 0, 255, 1)
+
+    # Get convex hull and draw on input
+    points = np.column_stack(np.where(cimg.transpose() > 0))
+    hull = cv2.convexHull(points)
+    himg = img.copy()
+    cv2.polylines(himg, [hull], True, (0, 0, 255), 1)
+
+    # Draw convex hull as filled mask
+    mask = np.zeros_like(cimg, dtype=np.uint8)
+    cv2.fillPoly(mask, [hull], 255)
+
+    # blacken out input using mask
+    mimg = img.copy()
+    mimg = cv2.bitwise_and(mimg, mimg, mask=mask)
+
+    # get rotate rectangle
+    rotrect = cv2.minAreaRect(hull)
+    (center), (width, height), angle = rotrect
+    box = cv2.boxPoints(rotrect)
+    boxpts = np.int0(box)
+
+    # draw rotated rectangle on copy of input
+    rimg = img.copy()
+    cv2.drawContours(rimg, [boxpts], 0, (0, 0, 255), 1)
+
+    # from https://www.pyimagesearch.com/2017/02/20/text-skew-correction-opencv-python/
+    # the `cv2.minAreaRect` function returns values in the
+    # range [-90, 0); as the rectangle rotates clockwise the
+    # returned angle tends to 0 -- in this special case we
+    # need to add 90 degrees to the angle
+    if angle < -45:
+        angle = -(90 + angle)
+
+    # otherwise, check width vs height
+    else:
+        if width > height:
+            angle = -(90 + angle)
+        else:
+            angle = -angle
+
+    # negate the angle to unrotate
+    neg_angle = -angle
+    print('unrotation angle:', neg_angle)
+    print('')
+
+    # Get rotation matrix
+    # center = (width // 2, height // 2)
+    M = cv2.getRotationMatrix2D(center, neg_angle, scale=1.0)
+
+    # unrotate to rectify
+    result = cv2.warpAffine(
+        mimg,
+        M,
+        (ww, hh),
+        flags=cv2.INTER_CUBIC,
+        borderMode=cv2.BORDER_CONSTANT,
+        borderValue=(0, 0, 0)
+    )
+
+    # save results
+    cv2.imwrite(save_path, result)

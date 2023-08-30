@@ -42,22 +42,38 @@ class LayoutXLMModule(pl.LightningModule):
         Returns: Model prediction.
         """
         # TODO : better implementation of this function
-        # Get the inputs
-        input_ids = batch['input_ids']
-        bbox = batch['bbox']
-        image = batch['image']
-        attention_mask = batch['attention_mask']
-        token_type_ids = batch['token_type_ids']
-        labels = batch['labels']
+        if 'labels' in batch:
+            # Get the inputs
+            input_ids = batch['input_ids']
+            bbox = batch['bbox']
+            image = batch['image']
+            attention_mask = batch['attention_mask']
+            token_type_ids = batch['token_type_ids']
+            labels = batch['labels']
 
-        outputs = self.model(
-            input_ids=input_ids,
-            bbox=bbox,
-            image=image,
-            attention_mask=attention_mask,
-            token_type_ids=token_type_ids,
-            labels=labels
-        )
+            outputs = self.model(
+                input_ids=input_ids,
+                bbox=bbox,
+                image=image,
+                attention_mask=attention_mask,
+                token_type_ids=token_type_ids,
+                labels=labels
+            )
+        else:
+            # Get the inputs
+            input_ids = batch['input_ids']
+            bbox = batch['bbox']
+            image = batch['image']
+            attention_mask = batch['attention_mask']
+            token_type_ids = batch['token_type_ids']
+
+            outputs = self.model(
+                input_ids=input_ids,
+                bbox=bbox,
+                image=image,
+                attention_mask=attention_mask,
+                token_type_ids=token_type_ids
+            )
         return outputs
 
     def training_step(self, batch, batch_idx):

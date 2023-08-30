@@ -44,3 +44,4 @@ pytorch_lightning
 transformers
 albumentations
 mlflow
+pytesseract
