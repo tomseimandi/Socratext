@@ -8,18 +8,16 @@ import matplotlib.colors as mcolors
 from mappings import id2label
 
 
-palette = list(mcolors.TABLEAU_COLORS.keys())[:9]
+palette_length = len(id2label)
+palette = list(mcolors.TABLEAU_COLORS.keys())[:palette_length]
 color2label = {}
 for (id, label) in id2label.items():
     color = palette[id]
     color2label[color] = label
 
-# Bounding box format 0-1000
-bounding_box_max_width = 1000
-bounding_box_max_height = 1000
 
-
-def resize_box(box, image_shape: Tuple[int, int]):
+def resize_box(box, image_shape: Tuple[int, int], bbox_format=(1000, 1000)):
+    bounding_box_max_width, bounding_box_max_height = bbox_format
     x0, y0, x1, y1 = box
     width, height = image_shape
 
@@ -61,5 +59,92 @@ def plot_predictions(image, boxes, predictions, save_path):
 
     handles = [patches.Patch(color=color, label=label) for color, label in color2label.items()]
     plt.legend(handles=handles, bbox_to_anchor=(1, 0.5))
+
+    plt.savefig(save_path, dpi=300)
+
+
+def plot_boxes(image, boxes, save_path, bbox_format=(1000, 1000)):
+    # boxes: torch.Size([n, 4])
+    # Create figure and axes
+    fig, ax = plt.subplots()
+
+    # Display the image
+    ax.imshow(image)
+
+    for box in boxes:
+        resized_box = resize_box(box, image.size, bbox_format=(1000, 1000))
+        # Create a Rectangle patch
+        rect = patches.Rectangle(
+            (resized_box[0], resized_box[1]),
+            resized_box[2] - resized_box[0],
+            resized_box[3] - resized_box[1],
+            linewidth=1,
+            alpha=0.3
+        )
+
+        # Add the patch to the Axes
+        ax.add_patch(rect)
+
+    plt.savefig(save_path, dpi=300)
+
+
+def plot_doctr_box(image, box, save_path):
+    fig, ax = plt.subplots()
+
+    # Display the image
+    ax.imshow(image)
+
+    x0 = box["value"]["x"]
+    y0 = box["value"]["y"]
+    x1 = x0 + box["value"]["width"]
+    y1 = y0 + box["value"]["height"]
+
+    box_coordinates = (x0, y0, x1, y1)
+    resized_box = resize_box(box_coordinates, image.size, bbox_format=(100, 100))
+    # Create a Rectangle patch
+    rect = patches.Rectangle(
+        (resized_box[0], resized_box[1]),
+        resized_box[2] - resized_box[0],
+        resized_box[3] - resized_box[1],
+        linewidth=1,
+        edgecolor=palette[0],
+        facecolor=palette[0],
+        alpha=0.3
+    )
+
+    # Add the patch to the Axes
+    ax.add_patch(rect)
+
+    plt.savefig(save_path, dpi=300)
+
+
+def plot_doctr_boxes(image, boxes, save_path):
+    fig, ax = plt.subplots()
+
+    # Display the image
+    ax.imshow(image)
+
+    for box in boxes:
+        x0 = box["value"]["x"]
+        y0 = box["value"]["y"]
+        x1 = x0 + box["value"]["width"]
+        y1 = y0 + box["value"]["height"]
+
+        box_coordinates = (x0, y0, x1, y1)
+        resized_box = resize_box(box_coordinates, image.size, bbox_format=(100, 100))
+
+        # Create a Rectangle patch
+        rect = patches.Rectangle(
+            (resized_box[0], resized_box[1]),
+            resized_box[2] - resized_box[0],
+            resized_box[3] - resized_box[1],
+            linewidth=1,
+            edgecolor=palette[0],
+            facecolor=palette[0],
+            alpha=0.3
+        )
+
+        # Add the patch to the Axes
+        ax.add_patch(rect)
 
     plt.savefig(save_path, dpi=300)

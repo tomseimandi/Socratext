@@ -45,3 +45,5 @@ transformers
 albumentations
 mlflow
 pytesseract
+python-doctr
+rapidfuzz==2.15.1

@@ -96,6 +96,7 @@ class TicketsDataModule(pl.LightningDataModule):
         transforms_augmentation: Compose = None,
         batch_size: int = 2,
         num_workers: int = 4,
+        keep_unlabeled_boxes: bool = True
     ):
         """
         Data Module initialization.
@@ -112,9 +113,13 @@ class TicketsDataModule(pl.LightningDataModule):
                 from albumentations applied on training dataset.
             batch_size (int): Define batch size.
             num_workers (int): Define number of workers to process data.
+            keep_unlabeled_boxes (bool): If True, unlabeled boxes are
+                kept with a special label in the data.
         """
         super().__init__()
-        self.formatter = LabelStudioJsonFormatter()
+        self.formatter = LabelStudioJsonFormatter(
+            keep_unlabeled_boxes
+        )
 
         self.data = self.formatter.format_data(data)
         self.data = self.formatter.filter_data(self.data)

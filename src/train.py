@@ -111,7 +111,7 @@ if __name__ == '__main__':
     parser.add_argument('--run-name', default='default')
     parser.add_argument('--gpus', default=1)
     parser.add_argument('--s3', dest='s3', action='store_true')
-    parser.add_argument('--lr', default=0.0004)
+    parser.add_argument('--lr', default=0.001)
     parser.add_argument('--batch-size', default=8)
     parser.set_defaults(s3=False)
 

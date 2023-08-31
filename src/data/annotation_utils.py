@@ -5,7 +5,7 @@ import json
 import pandas as pd
 from doctr.io import Document
 
-from src.data.doctr_utils import get_list_words_in_page
+from preprocessing.doctr_utils import get_list_words_in_page
 
 
 class AnnotationJsonCreator:
@@ -23,8 +23,8 @@ class AnnotationJsonCreator:
         counter = 0
         for doc_id, doc in enumerate(doctr_documents):
             image_path = self.raw_documents[doc_id].name
-            image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"/data/local-files/?d={image_path}"
-            #image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"{image_path}"
+            #image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"/data/local-files/?d={image_path}"
+            image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"{image_path}"
             page = doc.pages[0] # On ne traite que des png/jpg donc que des docs à une page
             dict_image = {"data": {"image" : image_path_labelstudio},
                           "predictions": [{'result': [], 'score': None}]} # result: list de dict pour chaque BBox
