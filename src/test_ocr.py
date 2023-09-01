@@ -11,7 +11,7 @@ from transformers import (
 )
 from PIL import Image, ImageOps
 from torch.nn.functional import softmax
-from util.plot import plot_predictions, plot_boxes, plot_doctr_boxes
+from util.plot import plot_predictions, plot_boxes, plot_doctr_boxes, plot_predictions_with_filter
 import torch
 from preprocessing.doctr_utils import DoctrTransformer
 from data.annotation_utils import AnnotationJsonCreator
@@ -46,12 +46,6 @@ def test_ocr(remote_server_uri, run_id, image_path):
     doctr_doc = DoctrTransformer().transform([image_path])
     annotations = AnnotationJsonCreator([image_path]).transform(doctr_doc, upload=False)
 
-    plot_doctr_boxes(
-        image,
-        boxes=annotations[0]["predictions"][0]["result"],
-        save_path="test0.png"
-    )
-
     # We want keys "image_path", "words", "boxes"
     formatter = LabelStudioJsonFormatter(
         keep_unlabeled_boxes=True
@@ -63,29 +57,18 @@ def test_ocr(remote_server_uri, run_id, image_path):
     words = image_data["words"]
     boxes = image_data["boxes"]
 
-    plot_boxes(
-        image,
-        boxes=boxes,
-        save_path="test1.png"
-    )
-
     assert len(words) == len(boxes)
     # Use processor to prepare everything
     encoded_inputs = processor(
         image,
         words,
         boxes=boxes,
+        word_labels=[0 for box in boxes],
         max_length=512,
         return_token_type_ids=True,
         # padding="max_length",
         truncation=True,
         return_tensors="pt",
-    )
-
-    plot_boxes(
-        image,
-        boxes=encoded_inputs["bbox"].squeeze(),
-        save_path="test2.png"
     )
 
     model_uri = "runs:/{}/model".format(run_id)
@@ -96,9 +79,10 @@ def test_ocr(remote_server_uri, run_id, image_path):
     predictions = softmax(outputs["logits"].squeeze(), dim=1)
     predictions = torch.argmax(predictions, dim=1)
 
-    plot_predictions(
+    plot_predictions_with_filter(
         image,
         boxes=encoded_inputs["bbox"].squeeze(),
+        box_filter=encoded_inputs["labels"].squeeze(),
         predictions=predictions,
         save_path="test.png"
     )

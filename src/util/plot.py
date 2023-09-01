@@ -148,3 +148,47 @@ def plot_doctr_boxes(image, boxes, save_path):
         ax.add_patch(rect)
 
     plt.savefig(save_path, dpi=300)
+
+
+def plot_predictions_with_filter(image, boxes, box_filter, predictions, save_path):
+    """
+    Plot predictions but we keep only the first bounding box 
+    for each word.
+    """
+
+    # boxes: torch.Size([n, 4])
+    # predictions: torch.Size([n, 9]) since there are 9 labels
+    # Create figure and axes
+    fig, ax = plt.subplots()
+
+    # Display the image
+    ax.imshow(image)
+
+    print(f'Nombre total de tokens: {len(boxes)}')
+    i = 0
+    for box, prediction, label in zip(boxes, predictions, box_filter):
+        if label == -100:
+            continue
+        else:
+            i += 1
+            resized_box = resize_box(box, image.size)
+            color = palette[prediction]
+            # Create a Rectangle patch
+            rect = patches.Rectangle(
+                (resized_box[0], resized_box[1]),
+                resized_box[2] - resized_box[0],
+                resized_box[3] - resized_box[1],
+                linewidth=1,
+                edgecolor=color,
+                facecolor=color,
+                alpha=0.3
+            )
+
+            # Add the patch to the Axes
+            ax.add_patch(rect)
+    print(f'Nombre de tokens après filtre: {i}')
+
+    handles = [patches.Patch(color=color, label=label) for color, label in color2label.items()]
+    plt.legend(handles=handles, bbox_to_anchor=(1, 0.5))
+
+    plt.savefig(save_path, dpi=300)

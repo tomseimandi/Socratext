@@ -43,9 +43,6 @@ class LabelStudioJsonFormatter:
             image_words, image_labels, image_boxes = self.format_image_annotation(
                 image_annotation
             )
-            print(image_words)
-            print(image_labels)
-            print(image_boxes)
 
             formatted_data.append(
                 {
@@ -80,9 +77,6 @@ class LabelStudioJsonFormatter:
             image_words, image_labels, image_boxes = self.format_image_annotation(
                 image_annotation
             )
-            print(image_words)
-            print(image_labels)
-            print(image_boxes)
 
             formatted_data.append(
                 {

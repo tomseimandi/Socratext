@@ -17,6 +17,9 @@ from transformers import LayoutLMv2Processor, LayoutXLMTokenizerFast, LayoutXLMP
 from data.data_module import TicketsDataModule
 from models.layout_xlm import LayoutXLMModule
 from utils import get_project_root
+from util.plot import plot_boxes
+from torchvision import transforms
+from PIL import Image
 
 
 def main(args):
