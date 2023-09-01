@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List
 import json
-
+import os
 import pandas as pd
 from doctr.io import Document
 
@@ -23,6 +23,7 @@ class AnnotationJsonCreator:
         counter = 0
         for doc_id, doc in enumerate(doctr_documents):
             image_path = self.raw_documents[doc_id].name
+            image_name = Path(image_path).stem
             #image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"/data/local-files/?d={image_path}"
             image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"{image_path}"
             page = doc.pages[0] # On ne traite que des png/jpg donc que des docs à une page
@@ -50,9 +51,13 @@ class AnnotationJsonCreator:
                 counter += 1
             annotations.append(dict_image)
 
-        if self.output_path is not None:
-            with open(self.output_path, 'w') as fp:
-                json.dump(annotations, fp)
+            if self.output_path is not None:
+                json_path = os.path.join(
+                    self.output_path,
+                    f"{image_name}.json"
+                )
+                with open(json_path, 'w') as fp:
+                    json.dump(dict_image, fp)
 
         return annotations
 

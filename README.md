@@ -13,16 +13,8 @@ Ce repertoire a pour objectif de co-construire des solutions d'OCR, d'extratctio
 
 Sur le [SSP Cloud](https://datalab.sspcloud.fr/home), lancer [ce service](https://datalab.sspcloud.fr/launcher/ide/vscode-python-gpu?autoLaunch=true&security.allowlist.enabled=false&service.image.pullPolicy=«Always»&onyxia.friendlyName=«vscode-python-gpu-pull») (configuration actuelle : 1 GPU). Installer les librairies de `requirements.txt` et run le script `setup.sh`. Pour lancer l'entraînement d'un modèle, et envoyer les logs sur l'espace de stockage du SSP Cloud :
 
-```
-python src/train.py --s3
-```
+### Pré-annotation de tickets avec Doctr
 
-Les flags `--lr` et `--batch-size` permettent de spécifier le pas d'apprentissage et la taille des batchs respectivement, par exemple :
-
-```
-python src/train.py --s3 --lr 0.004 --batch-size 5
-```
-
-Pour lancer `Tensorboard`, run le script `tensorboard.sh`.
+Pour pré-annoter les images qui se trouvent dans `projet-socratext/labelstudio/ls_data/`: `python src/data/prelabel_images.py projet-socratext/labelstudio/ls_data/ projet-socratext/labelstudio/ls_prelabels/`.
 
 
