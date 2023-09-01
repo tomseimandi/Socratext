@@ -95,8 +95,8 @@ if __name__ == "__main__":
     run_id = sys.argv[2]
     image_path = sys.argv[3]
 
-    remote_server_uri = "https://projet-socratext-288591.user.lab.sspcloud.fr"
-    run_id = "fbf483cc5043420bbc053fc8b1c4d1a4"
+    remote_server_uri = "https://projet-socratext-534529.user.lab.sspcloud.fr"
+    run_id = "82485c8a41424c77b2ae17c904689a07"
     image_path = "data/sample/20221108_230524.jpg"
 
     test_ocr(remote_server_uri, run_id, image_path)
