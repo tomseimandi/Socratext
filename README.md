@@ -15,6 +15,6 @@ Sur le [SSP Cloud](https://datalab.sspcloud.fr/home), lancer [ce service](https:
 
 ### Pré-annotation de tickets avec Doctr
 
-Pour pré-annoter les images qui se trouvent dans `projet-socratext/labelstudio/ls_data/`: `python src/data/prelabel_images.py projet-socratext/labelstudio/ls_data/ projet-socratext/labelstudio/ls_prelabels/`.
+Pour pré-annoter les images qui se trouvent dans `projet-socratext/labelstudio/ls_data/`: `python src/prelabel_images.py projet-socratext/labelstudio/ls_data/ projet-socratext/labelstudio/ls_prelabels/`.
 
-
+Pour lire les annotations finales faites grâce à LabelStudio: `python src/read_labels.py projet-socratext/labelstudio/ls_labels`.
