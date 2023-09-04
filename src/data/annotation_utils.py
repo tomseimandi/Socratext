@@ -22,14 +22,15 @@ class AnnotationJsonCreator:
         annotations = []
         counter = 0
         for doc_id, doc in enumerate(doctr_documents):
-            image_path = self.raw_documents[doc_id].name
+            image_path = self.raw_documents[doc_id]
             image_name = Path(image_path).stem
-            #image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"/data/local-files/?d={image_path}"
-            image_path_labelstudio = "/data/upload/" + image_path if upload==True else f"{image_path}"
-            page = doc.pages[0] # On ne traite que des png/jpg donc que des docs à une page
-            dict_image = {"data": {"image" : image_path_labelstudio},
-                          "predictions": [{'result': [], 'score': None}]} # result: list de dict pour chaque BBox
 
+            dict_image = {
+                "data": {"image": os.path.join("s3://", image_path)},
+                "predictions": [{"result": [], "score": None}],
+            }  # result: list de dict pour chaque BBox
+
+            page = doc.pages[0]
             list_words_in_page = get_list_words_in_page(page)
             height, width = page.dimensions[0], page.dimensions[1]
             id_annotation = 0
@@ -38,7 +39,7 @@ class AnnotationJsonCreator:
                 id_annotation += 1
                 label = word.value
                 xmin, ymin = word.geometry[0][0], word.geometry[0][1]
-                xmax, ymax =  word.geometry[1][0],  word.geometry[1][1]
+                xmax, ymax = word.geometry[1][0],  word.geometry[1][1]
                 width_a, height_a = xmax - xmin, ymax - ymin
                 dict_annotation = {'id': 'result{}'.format(id_annotation),
                                    "meta": {"text": [label]},

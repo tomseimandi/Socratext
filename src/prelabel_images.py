@@ -36,10 +36,12 @@ def main(data_path, output_path):
             for x in os.listdir(tmpdirname + "/")
             if x.endswith(extensions)
         ]
+        print(image_paths)
+        print(remote_paths)
 
         list_doctr_docs = DoctrTransformer().transform(image_paths)
         annotations = AnnotationJsonCreator(
-            image_paths,
+            remote_paths,
             output_path=tmpdirname
         ).transform(
             list_doctr_docs,
