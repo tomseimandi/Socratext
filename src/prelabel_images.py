@@ -32,12 +32,11 @@ def main(data_path, output_path):
                 pass
 
         image_paths = [
-            Path(os.path.join(tmpdirname + "/", x))
-            for x in os.listdir(tmpdirname + "/")
+            Path(os.path.join(tmpdirname + "/ls_data/", x))
+            for x in os.listdir(tmpdirname + "/ls_data/")
             if x.endswith(extensions)
         ]
-        print(image_paths)
-        print(remote_paths)
+        image_paths.sort()
 
         list_doctr_docs = DoctrTransformer().transform(image_paths)
         annotations = AnnotationJsonCreator(

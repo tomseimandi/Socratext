@@ -19,6 +19,7 @@ class AnnotationJsonCreator:
         return self
 
     def transform(self, doctr_documents: List[Document], upload: bool = False):
+        
         annotations = []
         counter = 0
         for doc_id, doc in enumerate(doctr_documents):
