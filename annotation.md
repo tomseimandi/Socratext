@@ -9,29 +9,19 @@
 - item_total_price : le prix total de la ligne. 
 - taux_tva : le taux de tva (pour chaque ligne, il arrive souvent que la tva soit indiquée via un code tva (voir tag ci-dessous))
 - code_tva: lorsque le taux appliqué à une ligne est indiqué via un code, tagguer par code tva. Il y aura alors un tableau de correspondance, il faudra alors tagguer les éléments du tableau avec code_tva pour le code et taux_tva pour le taux. La reconcialiation ex-post des lignes (par un traitement codé en python) permettra de reconstituer le tableau
+- total_price: le prix total TTC incluant le symbole de la monnaie si celui-ci apparait après le prix.
 
 ![](images/ticket_1.png)
 
-- total_price: le prix total TTC incluant le symbole de la monnaie si celui-ci apparait après le prix.
-- total_price_ht: le prix total HT 
-- no_tag: lorsque vous avez attribué le mauvais tag à une box, vous pouvez revenir en arrière (avec le bouton "retour en arrière"). Si vous en apercevez après avoir déjà réalisé d'autres annotation, vous ne pouvez pas supprimer le tag mal attribué et pouvez seulement lui en attribuer un autre (soit un autre tag soit le tag "no-tag" qui correspond à aucun tag)
 ## Connexion et accès aux documents à annoter 
-
-
-### Se créer un compte utilisateur 
-
-Vous allez être invité à vous créer un compte utilisateur. 
 
 ### Commencer à annoter 
 
-Une fois votre compte créé, vous devez sélectionner "Annotation Tickets" parmi les projets. 
-
+Sur le service SSP Cloud, sélectionner "Tickets" parmi les projets. 
 
 Vous arrivez alors sur un écran avec la liste des documents: 
 
 ![](images/labelstudio.png)
-
-
 
 Cliquer sur "Label All Tasks"
 
@@ -40,9 +30,7 @@ Vous arrivez alors sur le premier document à annoter. En cliquant sur "Label al
 ## Annoter les documents
 
 - Sélectionner la box correspondant au "Magasin" 
-- Pour attribuer le label "Magasin" à cette box, nous vous conseillons d'utiliser le raccourci clavier correspondant (le numéro correspondant à chaque label est donné en bas de l'écran), en cliquant sur 2 de votre clavier (sans activer la majuscule et sans utiliser le pavé numérique, soit la touche: &). 
-
-Une autre possibilité est une fois la box sélectionnée, cliquer sur le label "Magasin" en bas de l'écran
+- Pour attribuer le label "Magasin" à cette box, nous vous conseillons d'utiliser le raccourci clavier correspondant (le numéro correspondant à chaque label est donné en bas de l'écran), en cliquant sur 2 de votre clavier (sans activer la majuscule et sans utiliser le pavé numérique, soit la touche: &). Une autre possibilité est une fois la box sélectionnée, cliquer sur le label "Magasin" en bas de l'écran.
 - Réitérer l'opération pour les autres box à labéliser 
 
 Une fois que vous avez attribué tous les labels, cliquer sur le bouton "submit" à droite, ce qui enregistrera vos annotations et vous fera passer au prochain document à annoter. Pour avoir accès au bouton submit en haut à droite, il faut parfois remonter le menu déroulant qui liste l'ensemble des box du document. 
@@ -52,19 +40,13 @@ Remarques:
 - Si l'élément que vous souhaitez annoter est compris dans 2 boxes distinctes, annoter les 2 boxes avec le label correspondant
 - Si l'élément que vous souhaitez annoter n'est que partiellement encadré par une box, l'annoter quand même: 
 
-
 Autres remarques liées à la prise en main de l'outil: 
 - il arrive de créer un box par erreur, dans ce cas la supprimer en sélectionnant la box ajoutée par erreur et en appuyant sur la touche "effacer" du clavier 
 - si vous avez attribué le mauvais label à une box, il suffit de sélectionner la box et de sélectionner à nouveau le bon label (via les raccourcis clavier ou les options en bas de l'écran)
 - si vous avez attribué un label à une box qui n'est pas censée avoir de label, vous pouvez cliquer sur le bouton "Undo" en forme de flèche retour à droite de l'écran. 
 
-
-
-
 ## Quelques précisions sur des cas particuliers 
 
-
-- Quand la même info est présente plusieurs fois : on taggue seulement l'info la plus explicite (ex Total : xx euros) et il n'est pas nécessaire de mettre le tag lorsque l'information est présente une seconde fois. 
-- expliquer code / taux tva (et les traitements ex-post pour retraiter l'info à l'aide de l'identification des lignes)
-- Lorsque l'info n'est pas bien capturée par la boite (ex ) on ne la corrige pas (on cherche dans un premier temps à faire un algo qui prédit la catégorie de chaque boite et non un algo de bout en bout qui fait de l'ocr)
-- Lorsque dans la même box, on a 2*1,67 (soit la quantité et le prix unitaire), on annote la box avec item_unit_price
+- Quand la même info est présente plusieurs fois : on taggue seulement l'info la plus explicite (ex Total : xx euros) et il n'est pas nécessaire de mettre le tag lorsque l'information est présente une seconde fois.
+- Lorsque l'info n'est pas bien capturée par la boite on ne la corrige pas
+- Lorsque dans la même box, on a par exemple "2*1,67" (soit la quantité et le prix unitaire), on annote la box avec item_unit_price
