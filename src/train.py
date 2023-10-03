@@ -41,7 +41,7 @@ def main(args):
 
     # Loading a data sample
     with open(
-        os.path.join(get_project_root(), 'data/sample/labeled_sample.json')
+        os.path.join(get_project_root(), 'data/labeled_sample.json')
     ) as f:
         data = json.load(f)
     # Splitting the data into train/test

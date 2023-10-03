@@ -39,7 +39,8 @@ class TicketsDataset(Dataset):
         # Get path and image
         path = image_data["path"]
         image = Image.open(path)
-        image = ImageOps.exif_transpose(image)
+        # Not necessary ?
+        # image = ImageOps.exif_transpose(image)
 
         # Get word-level annotations
         words = image_data["words"]
@@ -148,7 +149,7 @@ class TicketsDataModule(pl.LightningDataModule):
         random.shuffle(self.data)
         train_slice = slice(0, int(n_samples * 0.8))
         val_slice = slice(int(n_samples * 0.8), n_samples)
-
+        
         self.train_dataset = TicketsDataset(
             self.data[train_slice], processor=self.processor
         )
