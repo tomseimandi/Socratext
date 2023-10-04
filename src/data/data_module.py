@@ -38,7 +38,7 @@ class TicketsDataset(Dataset):
 
         # Get path and image
         path = image_data["path"]
-        image = Image.open(path)
+        image = Image.open(path).convert("RGB")
         # Not necessary ?
         # image = ImageOps.exif_transpose(image)
 

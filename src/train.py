@@ -44,6 +44,14 @@ def main(args):
         os.path.join(get_project_root(), 'data/labeled_sample.json')
     ) as f:
         data = json.load(f)
+    print(f"{len(data)} annotations originally loaded.")
+    # Loading additional labels
+    with open(
+        os.path.join(get_project_root(), 'data/new_labeled_sample.json')
+    ) as f:    
+        data += json.load(f)
+    print(f"{len(data)} annotations finally loaded.")
+    
     # Splitting the data into train/test
     n_samples = len(data)
     random.shuffle(data)
@@ -68,7 +76,7 @@ def main(args):
         test_data=data[test_slide],
         processor=processor,
         batch_size=int(args.batch_size),
-        num_workers=cores
+        num_workers=0
     )  # type: ignore
 
     # Define model

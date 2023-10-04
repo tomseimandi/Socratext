@@ -1,6 +1,8 @@
 #!/bin/bash
 mc cp s3/projet-socratext/tickets/labeled_sample.json data/
+mc cp s3/projet-socratext/tickets/new_labeled_sample.json data/
 mc cp s3/projet-socratext/tickets/images.zip data/sample/
+mc cp -r s3/projet-socratext/labelstudio/ls_data/ data/sample/
 cd data/sample
 unzip images.zip
 

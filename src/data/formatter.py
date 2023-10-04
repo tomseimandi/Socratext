@@ -31,14 +31,15 @@ class LabelStudioJsonFormatter:
             data (List): Raw Label Studio data.
         """
         formatted_data = []
+        substring_to_remove = "/data/local-files/?d="
 
         for image_data in data:
             image_path = os.path.join(
                 get_project_root(),
                 "data/sample/",
-                image_data["data"]["image"][21:]
+                image_data["data"]["image"].replace(substring_to_remove, "")
             )
-
+            
             image_annotation = image_data["annotations"][0]
             image_words, image_labels, image_boxes = self.format_image_annotation(
                 image_annotation
